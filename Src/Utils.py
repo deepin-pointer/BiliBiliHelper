@@ -154,7 +154,10 @@ class Utils:
         if not data["code"]:
             data = data["data"]
             double_watch_info = data["double_watch_info"]
-            sign_info = data["sign_info"]
+
+        sign_data = await BasicRequest.req_check_signinfo()
+        if not sign_data["code"]:
+            sign_info = sign_data["data"]
 
         if double_watch_info["status"] == 1:
             print("双端观看直播已完成，但未领取奖励")
