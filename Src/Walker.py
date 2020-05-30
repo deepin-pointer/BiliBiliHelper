@@ -35,7 +35,7 @@ class Walker:
                 else:
                     self.inspectRoom()
 
-            await asyncio.sleep(random.randint(2, 8))
+            await asyncio.sleep(random.randint(1, 3))
 
     async def getList(self):
         url = "https://api.live.bilibili.com/room/v1/Area/getList"
@@ -76,11 +76,11 @@ class Walker:
         
         data = await BasicRequest.gift_req_check(room)
         if data["data"]["guard"]:
-            Log.raffle("遍历到%s房间的大航海" % (room))
+            Log.raffle("检测到%s房间的大航海" % (room))
             RaffleHandler.push2queue((room,), GuardRaffleHandler.check)
         if data["data"]["pk"]:
-            Log.raffle("遍历到%s房间的大乱斗" % (room))
+            Log.raffle("检测到%s房间的大乱斗" % (room))
             RaffleHandler.push2queue((room), PkRaffleHandler.check)
         if data["data"]["gift"]:
-            Log.raffle("遍历到%s房间的抽奖" % (room))
+            Log.raffle("检测到%s房间的活动抽奖" % (room))
             RaffleHandler.push2queue((room,""), TvRaffleHandler.check)

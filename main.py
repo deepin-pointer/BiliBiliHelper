@@ -34,6 +34,7 @@ from Version import version
 from CaseJudger import CaseJudger
 from MainDailyTask import MainDailyTask
 from MatchTask import MatchTask
+from Walker import Walker
 
 # 初始化所有class
 API = API()
@@ -51,6 +52,7 @@ Task = Task()
 rafflehandler = RaffleHandler()
 MainDailyTask = MainDailyTask()
 MatchTask = MatchTask()
+Walker = Walker()
 MonitorServer = MonitorServer(config["Server"]["ADDRESS"], config["Server"]["PASSWORD"])
 
 parser = OptionParser()
