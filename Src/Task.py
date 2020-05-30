@@ -34,7 +34,7 @@ class Task:
             data = await self.check()
 
             await self.double_watch_info(data)
-            await self.sign_info(data)
+            await self.sign_info()
 
             if len(self.done) >= 2:
                 self.done = []
@@ -51,18 +51,18 @@ class Task:
 
         return data
 
-    async def sign_info(self, value):
-        if len(value["data"]["sign_info"]) == 0:
-            return
+    async def sign_info(self):
         if "sign_info" in self.done:
             return
 
         Log.info("检查任务「每日签到」")
 
-        info = value["data"]["sign_info"]
+        sign_data = await BasicRequest.req_check_signinfo()
+        if not sign_data["code"]:
+            info = sign_data["data"]
 
         if info["status"] == 1:
-            Log.info("「每日签到」奖励已经领取")
+            Log.warning("「每日签到」奖励已经领取")
             self.done.append("sign_info")
             return
 

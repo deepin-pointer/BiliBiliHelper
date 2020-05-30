@@ -193,6 +193,12 @@ class BasicRequest:
         return response
 
     @staticmethod
+    async def req_check_signinfo():
+        url = "https://api.live.bilibili.com/sign/GetSignInfo"
+        response = await AsyncioCurl().request_json("GET", url, headers=config["pcheaders"])
+        return response
+
+    @staticmethod
     async def req_send_danmu(msg, roomId):
         url = "https://api.live.bilibili.com/msg/send"
         data = {
