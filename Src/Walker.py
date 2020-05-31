@@ -27,13 +27,13 @@ class Walker:
             return
 
         while True:
-            if self.arealist.count < 1:
-                self.getList()
+            if len(self.arealist) < 1:
+                await self.getList()
             else:
-                if self.queue.count < 1:
-                    self.getRooms()
+                if len(self.queue) < 1:
+                    await self.getRooms()
                 else:
-                    self.inspectRoom()
+                    await self.inspectRoom()
 
             await asyncio.sleep(random.randint(1, 3))
 
@@ -44,6 +44,7 @@ class Walker:
             Log.error("获取分区列表失败")
         else:
             for item in data["data"]:
+                Log.info("追加分区"+str(item["id"]))
                 self.arealist.append(item["id"])
 
     async def getRooms(self):
@@ -58,22 +59,24 @@ class Walker:
                 try:
                     for item in data["data"]["list"]:
                         if "lottery" in item["web_pendent"]:
+                            #Log.info("追加房间"+str(item["roomid"]))
                             self.queue.append(item["roomid"])
                 except:
                     Log.error("遍历房间出错")
-                page = page+1
+                page = page + 1
+                #Log.info("已处理"+str(page*99)+"/"+str(data["data"]["count"]))
                 if page*99 >= data["data"]["count"]:
                     break
-            await asyncio.sleep(random.randint(1, 3))
+            await asyncio.sleep(1)
         self.area = self.area+1
-        if self.area >= self.arealist.count:
+        if self.area >= len(self.arealist):
             self.area = 0
-    
+
     async def inspectRoom(self):
-        room=self.queue.pop()
+        room = self.queue.pop()
         if not await Utils.is_normal_room(room):
             return
-        
+
         data = await BasicRequest.gift_req_check(room)
         if data["data"]["guard"]:
             Log.raffle("检测到%s房间的大航海" % (room))
@@ -83,4 +86,4 @@ class Walker:
             RaffleHandler.push2queue((room), PkRaffleHandler.check)
         if data["data"]["gift"]:
             Log.raffle("检测到%s房间的活动抽奖" % (room))
-            RaffleHandler.push2queue((room,""), TvRaffleHandler.check)
+            RaffleHandler.push2queue((room, ""), TvRaffleHandler.check)
